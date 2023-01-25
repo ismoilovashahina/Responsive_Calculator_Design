@@ -67,6 +67,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
         backspace.setOnClickListener{
             operand.text = operand.text.dropLast(1)
+            result.text = calculate()
+
         }
 
         dot.setOnClickListener{
@@ -92,7 +94,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         }
 
 
-        calculate()
+
 
 
 
@@ -142,59 +144,67 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     fun solve1(l: MutableList<Any>):MutableList<Any>{
         var list = l
         var i = 0
-        while (list.contains('/') || list.contains('x')){
-            if (list[i] == 'x' || list[i] == '/'){
-                var old = list[i-1] as Float
-                var next = list[i+1] as Float
-                var amal = list[i]
-                var res = 0f
-                when(amal){
-                    '/'->{
-                        res = old/next
+        if (l.size>2){
+            while (list.contains('/') || list.contains('x')){
+                if (list[i] == 'x' || list[i] == '/'){
+                    var old = list[i-1] as Float
+                    var next = list[i+1] as Float
+                    var amal = list[i]
+                    var res = 0f
+                    when(amal){
+                        '/'->{
+                            res = old/next
+                        }
+                        'x'->{
+                            res = old*next
+                        }
                     }
-                    'x'->{
-                        res = old*next
-                    }
+                    list.set(i-1, res)
+                    list.removeAt(i)
+                    list.removeAt(i)
+                    i -= 2
                 }
-                list.set(i-1, res)
-                list.removeAt(i)
-                list.removeAt(i)
-                i -= 2
+                i++
             }
-            i++
         }
+
         Log.d("ARRList", list.toString())
 
         return l
     }
 
-    fun solve2(l: MutableList<Any>):MutableList<Any>{
+    fun solve2(l: MutableList<Any>):String{
         var list = l
         var i = 0
-        while (list.contains('+') || list.contains('-')){
-            if (list[i] == '+' || list[i] == '-'){
-                var old = list[i-1] as Float
-                var next = list[i+1] as Float
-                var amal = list[i]
-                var res = 0f
-                when(amal){
-                    '+'->{
-                        res = old+next
+        if (l.size>2){
+            Log.d("TAG", "hello")
+            while (list.contains('+') || list.contains('-')){
+                if (list[i] == '+' || list[i] == '-'){
+                    var old = list[i-1] as Float
+                    var next = list[i+1] as Float
+                    var amal = list[i]
+                    var res = 0f
+                    when(amal){
+                        '+'->{
+                            res = old+next
+                        }
+                        '-'->{
+                            res = old-next
+                        }
                     }
-                    '-'->{
-                        res = old-next
-                    }
+                    list.set(i-1, res)
+                    list.removeAt(i)
+                    list.removeAt(i)
+                    i -= 2
                 }
-                list.set(i-1, res)
-                list.removeAt(i)
-                list.removeAt(i)
-                i -= 2
+                i++
             }
-            i++
+            return l[0].toString()
         }
-        Log.d("ARRList", list.toString())
+        else return ""
 
-        return l
+
+
     }
 
 
@@ -202,11 +212,9 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         var list = createArray(operand.text.toString())
 
         solve1(list)
-        var res_list = solve2(list)
 
-        var res = res_list.joinToString()
+        return solve2(list)
 
-        return res
     }
 
 
